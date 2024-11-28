@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MY CV</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            color: #4CAF50;
+        }
+        h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        form {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        label {
+            font-size: 14px;
+            font-weight: bold;
+            color: #555;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        #previewArea {
+            background-color: #fff;
+            padding: 15px;
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            display: none;
+        }
+        #pdfPreview {
+            margin-top: 20px;
+            display: none;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>MY CV</h1>
+    <form id="cvForm">
+        <label for="fullName">සම්පූර්ණ නම:</label>
+        <input type="text" id="fullName" placeholder="ඔබේ නම ඇතුළත් කරන්න">
+
+        <label for="address">ලිපිනය:</label>
+        <input type="text" id="address" placeholder="ඔබේ ලිපිනය ඇතුළත් කරන්න">
+
+        <label for="idNumber">ID Number:</label>
+        <input type="text" id="idNumber" placeholder="ඔබේ ID Number ඇතුළත් කරන්න">
+
+        <label for="gender">ස්ත්‍රී/පුරුෂ:</label>
+        <select id="gender">
+            <option value="male">පුරුෂ</option>
+            <option value="female">ස්ත්‍රී</option>
+        </select>
+
+        <label for="maritalStatus">විවාහ/අවිවාහක:</label>
+        <select id="maritalStatus">
+            <option value="married">විවාහ</option>
+            <option value="single">අවිවාහක</option>
+        </select>
+
+        <h2>අධ්‍යාපන සුදුසුකම්</h2>
+        <label for="examNumber">විභාග අංකය:</label>
+        <input type="text" id="examNumber" placeholder="විභාග අංකය ඇතුළත් කරන්න">
+
+        <label for="year">වර්ෂය:</label>
+        <input type="text" id="year" placeholder="වර්ෂය ඇතුළත් කරන්න">
+
+        <table>
+            <tr>
+                <th>විෂය</th>
+                <th>සාමාර්ථය</th>
+            </tr>
+            <tr>
+                <td>
+                    <select>
+                        <option>ගණිතය</option>
+                        <option>විද්‍යාව</option>
+                        <option>සිංහල</option>
+                        <option>ආගම</option>
+                        <option>ඉතිහාසය</option>
+                        <option>English</option>
+                        <option>චිත්‍ර</option>
+                        <option>පුරවැසි අධ්‍යාපනය</option>
+                        <option>ගෘහ ආර්ථික විද්‍යාව</option>
+                    </select>
+                </td>
+                <td>
+                    <select>
+                        <option>A</option>
+                        <option>B</option>
+                        <option>C</option>
+                        <option>W</option>
+                    </select>
+                </td>
+            </tr>
+            <!-- Repeat the above <tr> block 8 more times -->
+        </table>
+
+        <button type="button" onclick="showPreview()">Preview PDF</button>
+        <button type="button" onclick="downloadPDF()">Download PDF</button>
+    </form>
+
+    <div id="previewArea">
+        <h2>Preview of Your CV:</h2>
+        <p><strong>සම්පූර්ණ නම:</strong> <span id="previewFullName"></span></p>
+        <p><strong>ලිපිනය:</strong> <span id="previewAddress"></span></p>
+        <p><strong>ID Number:</strong> <span id="previewIdNumber"></span></p>
+        <p><strong>ස්ත්‍රී/පුරුෂ:</strong> <span id="previewGender"></span></p>
+        <p><strong>විවාහ/අවිවාහක:</strong> <span id="previewMaritalStatus"></span></p>
+        <h3>Education Qualifications:</h3>
+        <p><strong>විභාග අංකය:</strong> <span id="previewExamNumber"></span></p>
+        <p><strong>වර්ෂය:</strong> <span id="previewYear"></span></p>
+        <table>
+            <tr>
+                <th>විෂය</th>
+                <th>සාමාර්ථය</th>
+            </tr>
+            <tr>
+                <td id="previewSubject"></td>
+                <td id="previewGrade"></td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="pdfPreview">
+        <h2>Your PDF Preview:</h2>
+        <iframe id="pdfIframe"></iframe>
+    </div>
+
+    <script>
+        function showPreview() {
+            // Get form values
+            const fullName = document.getElementById("fullName").value;
+            const address = document.getElementById("address").value;
+            const idNumber = document.getElementById("idNumber").value;
+            const gender = document.getElementById("gender").value;
+            const maritalStatus = document.getElementById("maritalStatus").value;
+            const examNumber = document.getElementById("examNumber").value;
+            const year = document.getElementById("year").value;
+            const subject = document.querySelector("select").value;
+            const grade = document.querySelector("select:nth-child(2)").value;
+
+            // Display the preview
+            document.getElementById("previewFullName").textContent = fullName;
+            document.getElementById("previewAddress").textContent = address;
+            document.getElementById("previewIdNumber").textContent = idNumber;
+            document.getElementById("previewGender").textContent = gender === 'male' ? 'පුරුෂ' : 'ස්ත්‍රී';
+            document.getElementById("previewMaritalStatus").textContent = maritalStatus === 'married' ? 'විවාහ' : 'අවිවාහක';
+            document.getElementById("previewExamNumber").textContent = examNumber;
+            document.getElementById("previewYear").textContent = year;
+            document.getElementById("previewSubject").textContent = subject;
+            document.getElementById("previewGrade").textContent = grade;
+
+            // Show the preview area
+            document.getElementById("previewArea").style.display = "block";
+        }
+
+        function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc
